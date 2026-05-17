@@ -1,6 +1,21 @@
 node_modules/
 .next/
+out/
 .shots/
 .env*.local
 .DS_Store
 *.log
+
+# Capacitor — keep source projects, drop build artifacts
+ios/App/build/
+ios/App/Pods/
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/App.xcodeproj/xcuserdata/
+ios/DerivedData/
+android/.gradle/
+android/build/
+android/app/build/
+android/captures/
+android/local.properties
+android/.idea/
+*.iml

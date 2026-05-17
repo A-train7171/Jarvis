@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SetLocate GO</string>
+    <string name="title_activity_main">SetLocate GO</string>
+    <string name="package_name">com.setlocate.go</string>
+    <string name="custom_url_scheme">com.setlocate.go</string>
+</resources>
