@@ -198,10 +198,19 @@ export default function CapturePage() {
                 <Button onClick={() => inputRef.current?.click()} variant="ghost">
                   <Camera size={16} /> {userImage ? "Retake" : "Take photo"}
                 </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setUserImage(scene.imageUrl)}
+                >
+                  Use demo shot
+                </Button>
                 <Button onClick={() => setPhase("complete")} disabled={!userImage}>
                   Submit capture
                 </Button>
               </div>
+              <p className="mono-meta text-ink-secondary mt-3 italic">
+                NO CAMERA? USE THE DEMO SHOT TO COMPLETE THE FLOW.
+              </p>
             </Card>
           </motion.div>
         )}
