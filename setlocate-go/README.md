@@ -9,18 +9,26 @@ The Next.js web app lives at the repo root and is unrelated to this scaffold.
 
 ## Status
 
-Phase 0 scaffold. Sections 1–3 of `SETLOCATE_GO_REQUIREMENTS.md` are
-implemented:
+Phase 0 mockup. Sections 1–3 of the requirements are implemented, plus
+the screen flow inferred from the chat brief
+(Landing → Sign Up → Avatar → Home → Check-In → Badge → Profile).
+All data is mocked in `lib/mockData.ts` — no real auth, no real GPS,
+no real backend. The flow is clickable end-to-end for design review.
 
 - Stack: Expo SDK 51, TypeScript, Expo Router, Zustand, NativeWind
-- Design tokens locked in `lib/theme.tokens.js` (single source of truth
-  for both Tailwind config and runtime styles)
-- Reusable components built in the order Section 3 lists them:
-  `Button`, `Card`, `Stat`, `LocationListItem`, `Badge`, `BannerCard`,
+- Design tokens in `lib/theme.tokens.js` (single source of truth for
+  both Tailwind config and runtime styles)
+- Reusable components in the order Section 3 lists them: `Button`,
+  `Card`, `Stat`, `LocationListItem`, `Badge`, `BannerCard`,
   `ProgressBar`
+- Screens: Landing, Sign Up, Avatar picker, Home, Map (placeholder
+  with list fallback), Badges grid, Profile, Check-In modal, Badge
+  detail modal
+- `/preview` route still ships every primitive on one page for token
+  review
 
-Screens (Section 7) and data model (Section 4+) are pending the rest
-of the spec.
+Awaiting Sections 4–14 of the requirements doc to swap mocks for real
+data model + API contract.
 
 ## Getting started
 
@@ -41,7 +49,13 @@ Landing screen once Section 7 lands.
 setlocate-go/
 ├── app/                 # Expo Router screens
 │   ├── _layout.tsx      # Root stack, SafeAreaProvider, dark status bar
-│   └── index.tsx        # Component preview (temporary)
+│   ├── index.tsx        # Landing
+│   ├── signup.tsx       # Sign up
+│   ├── avatar.tsx       # Avatar picker
+│   ├── (tabs)/          # Home, Map, Badges, Profile
+│   ├── checkin/[id].tsx # Check-in modal
+│   ├── badge/[id].tsx   # Badge detail modal
+│   └── preview.tsx      # Component primitives reference
 ├── components/          # Reusable UI primitives (Section 3)
 ├── lib/
 │   ├── theme.tokens.js  # Design tokens — Tailwind + runtime
