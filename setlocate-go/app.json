@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "SetLocate Go",
+    "slug": "setlocate-go",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "setlocategogo",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#000000",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.setlocate.go",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "SetLocate Go uses your location to detect when you arrive at filming locations so you can check in.",
+        "NSCameraUsageDescription": "SetLocate Go uses the camera to capture photos at filming locations."
+      }
+    },
+    "android": {
+      "package": "com.setlocate.go",
+      "adaptiveIcon": {
+        "backgroundColor": "#000000"
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "CAMERA"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "SetLocate Go uses your location to detect when you arrive at filming locations so you can check in."
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
