@@ -3,7 +3,7 @@ import { colors, gradient } from "@/theme";
 import { Screen } from "@/components/Screen";
 import { Disclaimer, Spinner } from "@/components/ui";
 import { useApp } from "@/store/AppContext";
-import { coachReply } from "@/lib/ai";
+import { coachStream } from "@/lib/ai";
 import { rankFor } from "@/lib/ranks";
 import { uid } from "@/lib/util";
 import type { CoachMsg } from "@/types";
@@ -12,13 +12,14 @@ export function Coach() {
   const { state, set } = useApp();
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [streaming, setStreaming] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
 
   const msgs = state.coachMsgs;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [msgs.length, sending]);
+  }, [msgs.length, sending, streaming]);
 
   function pushMsg(msg: CoachMsg) {
     set((prev) => ({ ...prev, coachMsgs: [...prev.coachMsgs, msg] }));
@@ -30,6 +31,7 @@ export function Coach() {
     setInput("");
     pushMsg({ id: uid(), role: "user", text, ts: new Date().toISOString() });
     setSending(true);
+    setStreaming("");
 
     const context = {
       name: state.name,
@@ -42,9 +44,14 @@ export function Coach() {
     };
 
     try {
-      const reply = await coachReply(text, context);
-      pushMsg({ id: uid(), role: "assistant", text: reply.text, ts: new Date().toISOString() });
+      let acc = "";
+      const full = await coachStream(text, context, (chunk) => {
+        acc += chunk;
+        setStreaming(acc);
+      });
+      pushMsg({ id: uid(), role: "assistant", text: full, ts: new Date().toISOString() });
     } finally {
+      setStreaming("");
       setSending(false);
     }
   }
@@ -82,8 +89,20 @@ export function Coach() {
             </div>
           ))}
           {sending && (
-            <div style={{ justifySelf: "start", padding: "10px 14px" }}>
-              <Spinner />
+            <div
+              style={{
+                justifySelf: "start",
+                maxWidth: "85%",
+                padding: "10px 14px",
+                borderRadius: 14,
+                fontSize: 14,
+                lineHeight: 1.5,
+                background: colors.charcoal2,
+                border: `1px solid ${colors.line}`,
+                color: "#fff",
+              }}
+            >
+              {streaming ? streaming : <Spinner />}
             </div>
           )}
         </div>

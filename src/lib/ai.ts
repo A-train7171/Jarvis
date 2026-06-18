@@ -57,22 +57,64 @@ export async function exerciseDetail(name: string, muscle: string): Promise<Exer
   }
 }
 
-export interface CoachReply {
-  text: string;
-}
+const COACH_OFFLINE =
+  "I'm offline right now, so here's the basics: stay consistent, hit your protein, sleep 7–9 hours, and progress gradually. We'll dig into specifics once I'm back online. (General info, not medical advice.)";
 
-/** Non-streaming coach reply (used as the fallback for the streaming path). */
-export async function coachReply(
+/**
+ * Stream a coach reply token-by-token from the backend (SSE). `onDelta` is
+ * called with each chunk; the full text is returned. Falls back to a static
+ * offline message if the server is unreachable or returns an error.
+ */
+export async function coachStream(
   message: string,
   context: Record<string, unknown>,
-): Promise<CoachReply> {
+  onDelta: (chunk: string) => void,
+): Promise<string> {
+  let res: Response;
   try {
-    return await postJSON<CoachReply>("/api/coach", { message, context });
+    res = await fetch(`${API_BASE}/api/coach`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, context }),
+    });
   } catch {
-    return {
-      text: "I'm offline right now, so here's the basics: stay consistent, hit your protein, sleep 7–9 hours, and progress gradually. We'll dig into specifics once I'm back online. (General info, not medical advice.)",
-    };
+    onDelta(COACH_OFFLINE);
+    return COACH_OFFLINE;
   }
+  if (!res.ok || !res.body) {
+    onDelta(COACH_OFFLINE);
+    return COACH_OFFLINE;
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let full = "";
+
+  // Parse the SSE stream: lines of `data: {...}` separated by blank lines.
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const events = buffer.split("\n\n");
+    buffer = events.pop() ?? "";
+    for (const evt of events) {
+      const line = evt.split("\n").find((l) => l.startsWith("data:"));
+      if (!line) continue;
+      const payload = line.slice(5).trim();
+      if (payload === "[DONE]") return full;
+      try {
+        const { text } = JSON.parse(payload) as { text?: string };
+        if (text) {
+          full += text;
+          onDelta(text);
+        }
+      } catch {
+        /* ignore malformed event */
+      }
+    }
+  }
+  return full || COACH_OFFLINE;
 }
 
 export interface FormFeedback {
