@@ -89,6 +89,14 @@ export const IconTrash = ({ size = 18 }: P) => (
     <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" />
   </svg>
 );
+export const IconShare = ({ size = 22 }: P) => (
+  <svg {...base(size)}>
+    <circle cx="6" cy="12" r="2.5" />
+    <circle cx="18" cy="6" r="2.5" />
+    <circle cx="18" cy="18" r="2.5" />
+    <path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6" />
+  </svg>
+);
 export const IconFlip = ({ size = 20 }: P) => (
   <svg {...base(size)}>
     <path d="M4 8a8 8 0 0114-4M20 16a8 8 0 01-14 4" />

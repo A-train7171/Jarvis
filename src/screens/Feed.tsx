@@ -2,10 +2,11 @@ import { colors } from "@/theme";
 import { Screen } from "@/components/Screen";
 import { Card, EmptyState } from "@/components/ui";
 import { Avatar } from "@/components/Avatar";
-import { IconFeed, IconFlame, IconCheck } from "@/components/icons";
+import { IconFeed, IconFlame, IconCheck, IconShare } from "@/components/icons";
 import { useApp } from "@/store/AppContext";
+import type { ShareKind } from "@/lib/shareCard";
 
-export function Feed({ onBack }: { onBack: () => void }) {
+export function Feed({ onBack, onShare }: { onBack: () => void; onShare: (kind?: ShareKind) => void }) {
   const { state } = useApp();
 
   return (
@@ -30,6 +31,13 @@ export function Feed({ onBack }: { onBack: () => void }) {
               <span style={{ color: p.type === "rankup" ? colors.warn : colors.good }}>
                 {p.type === "rankup" ? <IconFlame size={20} /> : <IconCheck size={18} />}
               </span>
+              <button
+                onClick={() => onShare(p.type === "rankup" ? "rankup" : "workout")}
+                aria-label="Share this"
+                style={{ background: "transparent", border: "none", color: colors.glow, display: "flex" }}
+              >
+                <IconShare size={20} />
+              </button>
             </Card>
           ))}
         </div>

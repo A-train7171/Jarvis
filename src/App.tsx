@@ -15,10 +15,13 @@ import { Feed } from "./screens/Feed";
 import { About } from "./screens/About";
 import { Profile } from "./screens/Profile";
 import { FormCheck } from "./screens/FormCheck";
+import { Share } from "./screens/Share";
+import type { ShareKind } from "./lib/shareCard";
 
 export function App() {
   const { state, loaded } = useApp();
   const [route, setRoute] = useState<Route>("home");
+  const [shareSeed, setShareSeed] = useState<ShareKind | null>(null);
 
   if (!loaded) {
     return (
@@ -37,11 +40,15 @@ export function App() {
   }
 
   const nav = (r: Route) => setRoute(r);
+  const goShare = (kind?: ShareKind) => {
+    setShareSeed(kind ?? null);
+    setRoute("share");
+  };
 
   const screen = (() => {
     switch (route) {
       case "home":
-        return <Home onNavigate={nav} />;
+        return <Home onNavigate={nav} onShare={goShare} />;
       case "nutrition":
         return <Nutrition />;
       case "workouts":
@@ -53,13 +60,15 @@ export function App() {
       case "devices":
         return <Devices onBack={() => nav("home")} />;
       case "feed":
-        return <Feed onBack={() => nav("home")} />;
+        return <Feed onBack={() => nav("home")} onShare={goShare} />;
       case "about":
         return <About onBack={() => nav("home")} />;
       case "profile":
         return <Profile onBack={() => nav("home")} />;
       case "form":
         return <FormCheck onBack={() => nav("home")} />;
+      case "share":
+        return <Share onBack={() => nav("home")} seed={shareSeed} />;
     }
   })();
 

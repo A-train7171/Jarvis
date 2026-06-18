@@ -64,7 +64,8 @@ The Anthropic API key always lives **server-side**. No secrets ship in the app.
 │       ├── Feed.tsx         # Auto activity posts (rank-up / workout)
 │       ├── About.tsx        # Founder bio + verified sources
 │       ├── Profile.tsx      # Edit profile + goals (re-run calculator)
-│       └── FormCheck.tsx    # Live camera (getUserMedia) + AI form cues
+│       ├── FormCheck.tsx    # Live camera (getUserMedia) + AI form cues
+│       └── Share.tsx        # Branded share banners (screenshot / share / save)
 ```
 
 ---
@@ -165,8 +166,11 @@ cd android && ./gradlew assembleDebug
    `android/` (app ID `io.pockettrainer.app`, INTERNET permission, Preferences
    plugin synced). `npx cap sync` verified. The on-device debug build / signing
    runs on your machine (Android SDK + device) — see _Native Android_ above.
-4. **Health sync** — Health Connect / HealthKit / Samsung Health → Apps &
-   Devices + Home.
+4. **Share banners** ✅ _(this milestone)_ — branded, screenshot-ready cards
+   (`src/lib/shareCard.ts`, canvas → PNG) for profile / rank-up / streak /
+   workout / nutrition, in square (1:1) and story (9:16) formats. Share via the
+   Web Share API (with file) or save/download; reachable from Home and from each
+   Feed post. _Native health sync (Health Connect / HealthKit) is deferred._
 5. **Camera & calendar** — native Capacitor Camera; calendar import for Smart
    Schedule.
 6. **Landing site** — marketing page into the repo + working waitlist + deploy.

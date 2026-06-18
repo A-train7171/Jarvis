@@ -8,6 +8,7 @@ export type Route =
   | "feed"
   | "about"
   | "profile"
-  | "form";
+  | "form"
+  | "share";
 
 export const PRIMARY_TABS: Route[] = ["home", "nutrition", "workouts", "coach", "schedule"];

@@ -6,6 +6,7 @@ import { useApp } from "@/store/AppContext";
 import { totalMacros } from "@/lib/nutrition";
 import { todayISO } from "@/lib/util";
 import type { Route } from "@/routes";
+import type { ShareKind } from "@/lib/shareCard";
 import {
   IconChevron,
   IconFlame,
@@ -15,9 +16,16 @@ import {
   IconFeed,
   IconInfo,
   IconCalendar,
+  IconShare,
 } from "@/components/icons";
 
-export function Home({ onNavigate }: { onNavigate: (r: Route) => void }) {
+export function Home({
+  onNavigate,
+  onShare,
+}: {
+  onNavigate: (r: Route) => void;
+  onShare: (kind?: ShareKind) => void;
+}) {
   const { state } = useApp();
   const today = todayISO();
   const macros = totalMacros(state.food[today]);
@@ -115,6 +123,7 @@ export function Home({ onNavigate }: { onNavigate: (r: Route) => void }) {
 
       {/* quick entries */}
       <div style={{ display: "grid", gap: 10 }}>
+        <NavCard icon={<IconShare size={22} />} title="Share a banner" sub="Make a card to screenshot or share" onClick={() => onShare()} />
         <NavCard icon={<IconCamera size={22} />} title="Form Check" sub="Check your form with the camera" onClick={() => onNavigate("form")} />
         <NavCard icon={<IconFeed size={22} />} title="Feed" sub="Your activity and milestones" onClick={() => onNavigate("feed")} />
         <NavCard icon={<IconWatch size={22} />} title="Apps & Devices" sub="Sync health & smartwatch" onClick={() => onNavigate("devices")} />
