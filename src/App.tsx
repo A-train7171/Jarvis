@@ -52,7 +52,7 @@ export function App() {
       case "nutrition":
         return <Nutrition />;
       case "workouts":
-        return <Workouts />;
+        return <Workouts onShare={goShare} />;
       case "coach":
         return <Coach />;
       case "schedule":

@@ -14,8 +14,11 @@ import {
 } from "@/components/ui";
 import { IconPlus, IconTrash, IconCheck, IconDumbbell, IconChevron } from "@/components/icons";
 import { MuscleMap, type MuscleGroup } from "@/components/MuscleMap";
+import { Celebration } from "@/components/Celebration";
 import { useApp } from "@/store/AppContext";
-import { uid } from "@/lib/util";
+import { rankFor, rankIndex } from "@/lib/ranks";
+import { todayISO, uid } from "@/lib/util";
+import type { ShareKind } from "@/lib/shareCard";
 import { CARDIO_TYPES, estimateCardioCalories, type Intensity } from "@/lib/cardio";
 import { LIBRARY, MUSCLE_GROUPS } from "@/lib/exercises";
 import { exerciseDetail, type ExerciseDetail } from "@/lib/ai";
@@ -25,10 +28,11 @@ type Stage = "overview" | "builder" | "live" | "library";
 
 const detailCache = new Map<string, ExerciseDetail>();
 
-export function Workouts() {
+export function Workouts({ onShare }: { onShare?: (kind?: ShareKind) => void }) {
   const { state, completeWorkout } = useApp();
   const [stage, setStage] = useState<Stage>("overview");
   const [draft, setDraft] = useState<Workout | null>(null);
+  const [celebrate, setCelebrate] = useState<{ leveledUp: boolean; rank: string } | null>(null);
 
   function newWorkout() {
     setDraft({ id: uid(), date: "", name: "New Workout", exercises: [], completed: false });
@@ -41,7 +45,14 @@ export function Workouts() {
   }
 
   function finishSession() {
-    if (draft) completeWorkout(draft);
+    if (draft) {
+      // Predict whether finishing logs a new active day that crosses a rank tier
+      // (registerActiveDay only counts the first completion of the day).
+      const firstToday = state.lastActive !== todayISO();
+      const leveledUp = firstToday && rankIndex(state.activeDays + 1) !== rankIndex(state.activeDays);
+      completeWorkout(draft);
+      setCelebrate({ leveledUp, rank: rankFor(firstToday ? state.activeDays + 1 : state.activeDays) });
+    }
     setDraft(null);
     setStage("overview");
   }
@@ -76,7 +87,21 @@ export function Workouts() {
   // overview + history
   const completed = state.workouts.filter((w) => w.completed);
   return (
-    <Screen title="Workouts">
+    <>
+      {celebrate && (
+        <Celebration
+          leveledUp={celebrate.leveledUp}
+          title={celebrate.leveledUp ? "You leveled up!" : "Workout complete!"}
+          subtitle={
+            celebrate.leveledUp
+              ? `You reached ${celebrate.rank}. Nice work — keep the streak alive.`
+              : "Logged it. Streak and rank updated."
+          }
+          onShare={onShare ? () => { setCelebrate(null); onShare(celebrate.leveledUp ? "rankup" : "workout"); } : undefined}
+          onDone={() => setCelebrate(null)}
+        />
+      )}
+      <Screen title="Workouts">
       <Button onClick={newWorkout} style={{ marginBottom: 12 }}>
         + New workout
       </Button>
@@ -112,7 +137,8 @@ export function Workouts() {
           ))}
         </div>
       )}
-    </Screen>
+      </Screen>
+    </>
   );
 }
 
