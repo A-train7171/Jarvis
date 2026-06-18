@@ -91,6 +91,11 @@ export function Workouts({ onShare }: { onShare?: (kind?: ShareKind) => void }) 
       {celebrate && (
         <Celebration
           leveledUp={celebrate.leveledUp}
+          badge={
+            celebrate.leveledUp
+              ? `★ ${celebrate.rank}`
+              : `🔥 ${Math.max(1, state.streak)} day streak`
+          }
           title={celebrate.leveledUp ? "You leveled up!" : "Workout complete!"}
           subtitle={
             celebrate.leveledUp

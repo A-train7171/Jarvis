@@ -7,6 +7,7 @@ import { useApp } from "@/store/AppContext";
 import { calcGoals, MODE_LABELS } from "@/lib/calcGoals";
 import { colorFromName, inToFtIn, kgToLb, lbToKg } from "@/lib/util";
 import { processAvatar } from "@/lib/image";
+import { Celebration } from "@/components/Celebration";
 import type { Experience, GoalMode } from "@/types";
 
 const STEPS = ["Profile", "About you", "Goal", "Targets"];
@@ -15,6 +16,7 @@ const AVATAR_COLORS = ["#8B2EFF", "#5B18C9", "#B65CFF", "#7C3AED", "#3FD18B", "#
 export function Onboarding() {
   const { state, set } = useApp();
   const [step, setStep] = useState(0);
+  const [celebrating, setCelebrating] = useState(false);
 
   // step 1
   const [name, setName] = useState(state.name);
@@ -51,7 +53,10 @@ export function Onboarding() {
   };
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  const finish = () => {
+  // Celebrate first; commit (and enter the app) when they tap Done.
+  const finish = () => setCelebrating(true);
+
+  const commit = () => {
     set((prev) => ({
       ...prev,
       name: name.trim(),
@@ -87,6 +92,17 @@ export function Onboarding() {
       : step === 1
         ? weightLb > 0 && heightIn > 0
         : true;
+
+  if (celebrating) {
+    return (
+      <Celebration
+        badge={`★ Goal: ${goals.cal} kcal/day`}
+        title={`Welcome, ${name.split(" ")[0] || "athlete"}!`}
+        subtitle="Your plan's ready. Let's get to work."
+        onDone={commit}
+      />
+    );
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
