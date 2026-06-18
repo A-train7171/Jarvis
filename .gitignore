@@ -22,6 +22,6 @@ tsconfig.tsbuildinfo
 *.log
 *.sw?
 
-# capacitor native build artifacts
-/android
+# capacitor — iOS native project is regenerated; the Android project is committed
+# (Capacitor writes its own android/.gitignore for build outputs).
 /ios

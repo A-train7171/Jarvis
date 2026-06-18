@@ -120,6 +120,40 @@ falls back to local heuristics (see `src/lib/ai.ts`).
 
 ---
 
+### Native Android (Capacitor)
+
+The Android project lives in `android/` (committed). Capacitor wraps the same
+web build in a native WebView. Build artifacts and `local.properties` are
+git-ignored, so after cloning you must build the web app and sync before
+opening the project.
+
+**Prerequisites:** Android Studio (or the Android SDK + platform 34) and
+**JDK 17** (Capacitor 6 / AGP 8.2.1 targets 17 — newer JDKs can break Gradle).
+
+```bash
+# 1. Point the app at your deployed backend (see note below), then:
+npm run build
+npx cap sync android        # copies dist/ into the native project
+
+# 2a. Open in Android Studio and Run on a device/emulator:
+npx cap open android
+# 2b. …or build a debug APK from the CLI:
+cd android && ./gradlew assembleDebug
+#     → android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+> **Backend URL on device.** In the native app, relative `/api/*` calls resolve
+> to the WebView origin, not your dev machine. Set `VITE_API_BASE` to the
+> backend's public HTTPS URL **before** `npm run build` (e.g.
+> `VITE_API_BASE=https://api.yourhost.com npm run build`). Without it, AI
+> features fall back to local heuristics on device.
+
+> **Play target API level.** The project targets API 34 (Capacitor 6's supported
+> ceiling). Google Play requires targeting a recent API level for new
+> submissions — bump `compileSdkVersion`/`targetSdkVersion` in
+> `android/variables.gradle` (upgrading to Capacitor 7 / a newer AGP as needed)
+> before the production track. App ID: `io.pockettrainer.app`.
+
 ## Milestones
 
 1. **Scaffold + port UI + storage** ✅ — Vite/React/TS app, full prototype UI,
@@ -127,7 +161,10 @@ falls back to local heuristics (see `src/lib/ai.ts`).
 2. **AI backend** ✅ _(this milestone)_ — Express proxy in `server/` for macros /
    exercise detail / coach (streamed) / form check. Anthropic key stays
    server-side; rate-limited; graceful 503 → local fallback.
-3. **Capacitor** — add Android, debug build on device.
+3. **Capacitor** ✅ _(this milestone)_ — Android project scaffolded in
+   `android/` (app ID `io.pockettrainer.app`, INTERNET permission, Preferences
+   plugin synced). `npx cap sync` verified. The on-device debug build / signing
+   runs on your machine (Android SDK + device) — see _Native Android_ above.
 4. **Health sync** — Health Connect / HealthKit / Samsung Health → Apps &
    Devices + Home.
 5. **Camera & calendar** — native Capacitor Camera; calendar import for Smart
