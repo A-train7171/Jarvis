@@ -10,6 +10,9 @@ out
 *.local
 tsconfig.tsbuildinfo
 
+# server runtime data (waitlist signups, etc.)
+server/data
+
 # env
 .env
 .env.*

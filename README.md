@@ -155,6 +155,35 @@ cd android && ./gradlew assembleDebug
 > `android/variables.gradle` (upgrading to Capacitor 7 / a newer AGP as needed)
 > before the production track. App ID: `io.pockettrainer.app`.
 
+### Landing site (`site/`)
+
+A fast, self-contained static marketing page in the brand — no build step.
+
+```
+site/
+├── index.html      # hero (CSS phone mockup), features, how-it-works, founder, waitlist
+├── privacy.html    # draft privacy policy (youth-safety / Play)
+├── favicon.svg · og-image.png · sitemap.xml · robots.txt
+└── vercel.json     # headers + clean URLs (Vercel)
+netlify.toml        # publish = site/ + headers (Netlify)
+```
+
+Preview locally with any static server, e.g. `npx serve site` (or open
+`site/index.html`).
+
+**Waitlist.** The form POSTs to `WAITLIST_ENDPOINT` (top of the inline script in
+`index.html`), default `/api/waitlist`. The backend's `POST /api/waitlist`
+validates the email (with a honeypot) and appends it to
+`server/data/waitlist.jsonl`. Two ways to connect them in production:
+
+- **Proxy** `/api/*` from the host to your backend (uncomment the redirect in
+  `netlify.toml`) and keep the default relative endpoint, or
+- Set `WAITLIST_ENDPOINT` to the backend's full URL (add the site origin to the
+  backend's `CORS_ORIGINS`). A Formspree/Mailchimp URL also works as a drop-in.
+
+**Deploy.** Netlify: connect the repo — `netlify.toml` already sets
+`publish = "site"`. Vercel: set the project's root directory to `site/`.
+
 ## Milestones
 
 1. **Scaffold + port UI + storage** ✅ — Vite/React/TS app, full prototype UI,
@@ -173,7 +202,10 @@ cd android && ./gradlew assembleDebug
    Feed post. _Native health sync (Health Connect / HealthKit) is deferred._
 5. **Camera & calendar** — native Capacitor Camera; calendar import for Smart
    Schedule.
-6. **Landing site** — marketing page into the repo + working waitlist + deploy.
+6. **Landing site** ✅ _(this milestone)_ — static brand page in `site/`
+   (hero + CSS phone mockup, features, how-it-works, founder, verified
+   sources), a working waitlist wired to `POST /api/waitlist`, SEO/OG meta +
+   OG image, sitemap/robots, privacy draft, and Netlify/Vercel deploy configs.
 7. **Accounts & sync** (on request) — auth, DB, cross-device sync, privacy
    policy, Play closed-testing track.
 

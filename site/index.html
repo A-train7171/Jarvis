@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+
+    <title>Pocket Trainer — Your Coach. In Your Pocket.</title>
+    <meta
+      name="description"
+      content="Track workouts and macros, check your form with the camera, sync your watch, and get AI coaching that adapts to you. Join the Pocket Trainer waitlist."
+    />
+    <link rel="canonical" href="https://pockettrainer.app/" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Pocket Trainer" />
+    <meta property="og:title" content="Pocket Trainer — Your Coach. In Your Pocket." />
+    <meta
+      property="og:description"
+      content="A mobile-first fitness & nutrition coach: macros, workouts, form check, and AI coaching that adapts to you."
+    />
+    <meta property="og:url" content="https://pockettrainer.app/" />
+    <meta property="og:image" content="https://pockettrainer.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pocket Trainer — Your Coach. In Your Pocket." />
+    <meta
+      name="twitter:description"
+      content="Macros, workouts, form check, and AI coaching that adapts to you."
+    />
+    <meta name="twitter:image" content="https://pockettrainer.app/og-image.png" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MobileApplication",
+        "name": "Pocket Trainer",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Android, iOS",
+        "slogan": "Your Coach. In Your Pocket.",
+        "creator": { "@type": "Person", "name": "Andrew Gumbs" }
+      }
+    </script>
+
+    <style>
+      :root {
+        --jet: #050505;
+        --charcoal: #101014;
+        --charcoal2: #15151a;
+        --line: #26262c;
+        --primary: #8b2eff;
+        --deep: #5b18c9;
+        --glow: #b65cff;
+        --white: #fff;
+        --light: #d9d9d9;
+        --muted: #8a8a92;
+        --good: #3fd18b;
+        --warn: #ffb020;
+        --grad: linear-gradient(135deg, #5b18c9, #8b2eff 55%, #b65cff);
+        color-scheme: dark;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--jet);
+        color: var(--white);
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      a { color: inherit; }
+      h1, h2, h3 {
+        font-family: "Montserrat", sans-serif;
+        font-style: italic;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        line-height: 1.05;
+        margin: 0;
+      }
+      .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+      .grad-text {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: none;
+        border-radius: 999px;
+        padding: 14px 24px;
+        font-weight: 700;
+        font-size: 15px;
+        color: #fff;
+        background: var(--grad);
+        box-shadow: 0 8px 24px rgba(139, 46, 255, 0.35);
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+      .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(139, 46, 255, 0.45); }
+      .btn.ghost { background: transparent; border: 1px solid var(--line); box-shadow: none; color: var(--light); }
+      :focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; border-radius: 6px; }
+
+      /* nav */
+      header.nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(5, 5, 5, 0.7);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-family: "Montserrat"; font-style: italic; font-weight: 800; text-transform: uppercase; font-size: 18px; }
+      .nav-links { display: flex; align-items: center; gap: 28px; }
+      .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; }
+      .nav-links a:hover { color: #fff; }
+      .nav-links a.cta { color: #fff; }
+      @media (max-width: 760px) { .nav-links .hide-sm { display: none; } }
+
+      /* hero */
+      .hero { position: relative; padding: 72px 0 64px; overflow: hidden; }
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -180px; right: -160px;
+        width: 540px; height: 540px;
+        background: radial-gradient(circle, rgba(139, 46, 255, 0.28), transparent 70%);
+        pointer-events: none;
+      }
+      .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+      .eyebrow { color: var(--glow); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; font-size: 13px; }
+      .hero h1 { font-size: clamp(40px, 7vw, 68px); margin: 14px 0 18px; }
+      .hero p.lead { color: var(--light); font-size: 18px; max-width: 30em; margin: 0 0 28px; }
+      .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
+      @media (max-width: 860px) {
+        .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+        .phone-wrap { order: -1; }
+      }
+
+      /* waitlist form */
+      .waitlist { display: flex; gap: 10px; max-width: 460px; flex-wrap: wrap; }
+      .waitlist input[type="email"] {
+        flex: 1;
+        min-width: 200px;
+        background: var(--charcoal2);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: #fff;
+        padding: 14px 18px;
+        font-size: 15px;
+      }
+      .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+      .form-msg { font-size: 14px; margin-top: 12px; min-height: 20px; }
+      .form-msg.ok { color: var(--good); }
+      .form-msg.err { color: #ff6b6b; }
+
+      /* phone mockup */
+      .phone-wrap { display: flex; justify-content: center; }
+      .phone {
+        width: 300px;
+        border-radius: 40px;
+        border: 1px solid var(--line);
+        background: var(--charcoal);
+        padding: 14px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 50px rgba(139, 46, 255, 0.15);
+      }
+      .screen { background: var(--jet); border-radius: 28px; padding: 20px 18px; }
+      .screen .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+      .screen .greet { font-size: 12px; color: var(--muted); }
+      .screen .name { font-family: "Montserrat"; font-style: italic; font-weight: 800; text-transform: uppercase; font-size: 18px; }
+      .av { width: 38px; height: 38px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+      .ring { width: 150px; height: 150px; margin: 6px auto 14px; border-radius: 50%; display: grid; place-items: center;
+        background: conic-gradient(var(--primary) 0 65%, var(--line) 65% 100%);
+        -webkit-mask: radial-gradient(circle 56px at center, transparent 98%, #000 100%);
+        mask: radial-gradient(circle 56px at center, transparent 98%, #000 100%);
+      }
+      .ring-box { position: relative; width: 150px; height: 150px; margin: 6px auto 14px; }
+      .ring-label { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+      .ring-label .rk { font-family: "Montserrat"; font-style: italic; font-weight: 800; text-transform: uppercase; font-size: 22px; }
+      .ring-label .sub { font-size: 10px; color: var(--muted); }
+      .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+      .tile { background: var(--charcoal2); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+      .tile .v { font-family: "Montserrat"; font-style: italic; font-weight: 800; font-size: 18px; }
+      .tile .l { font-size: 10px; color: var(--muted); }
+      .bars { background: var(--charcoal2); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 9px; }
+      .bar .lab { display: flex; justify-content: space-between; font-size: 10px; color: var(--light); margin-bottom: 3px; }
+      .bar .track { height: 6px; background: var(--jet); border-radius: 99px; overflow: hidden; }
+      .bar .fill { height: 100%; border-radius: 99px; }
+
+      /* sections */
+      section { padding: 72px 0; }
+      .sec-head { text-align: center; margin-bottom: 44px; }
+      .sec-head h2 { font-size: clamp(28px, 4.5vw, 40px); }
+      .sec-head p { color: var(--muted); max-width: 38em; margin: 12px auto 0; }
+      .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      @media (max-width: 860px) { .cards { grid-template-columns: 1fr; } }
+      .card { background: var(--charcoal2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+      .card .ic { width: 44px; height: 44px; border-radius: 12px; background: rgba(139, 46, 255, 0.14); display: grid; place-items: center; color: var(--glow); margin-bottom: 14px; }
+      .card h3 { font-size: 17px; margin-bottom: 8px; }
+      .card p { color: var(--muted); font-size: 14.5px; margin: 0; }
+
+      /* how it works */
+      .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; counter-reset: step; }
+      @media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+      .step { background: var(--charcoal2); border: 1px solid var(--line); border-radius: 16px; padding: 26px 24px; position: relative; }
+      .step .n { font-family: "Montserrat"; font-style: italic; font-weight: 900; font-size: 40px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .step h3 { font-size: 17px; margin: 6px 0 8px; }
+      .step p { color: var(--muted); font-size: 14.5px; margin: 0; }
+
+      /* founder */
+      .founder { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start; background: var(--charcoal2); border: 1px solid var(--line); border-radius: 20px; padding: 32px; }
+      @media (max-width: 680px) { .founder { grid-template-columns: 1fr; text-align: center; } }
+      .founder .ag { width: 96px; height: 96px; border-radius: 50%; background: var(--grad); display: grid; place-items: center; font-family: "Montserrat"; font-style: italic; font-weight: 900; font-size: 34px; margin: 0 auto; }
+      .founder h3 { font-size: 22px; }
+      .founder .role { color: var(--glow); font-size: 14px; margin: 2px 0 12px; }
+      .founder p { color: var(--light); margin: 0 0 12px; }
+      .sources { margin-top: 22px; display: grid; gap: 8px; }
+      .sources a { color: var(--glow); font-size: 13.5px; text-decoration: none; }
+      .sources a:hover { text-decoration: underline; }
+
+      /* final cta */
+      .final { text-align: center; background: radial-gradient(circle at 50% 0%, rgba(139, 46, 255, 0.16), transparent 60%); }
+      .final h2 { font-size: clamp(30px, 5vw, 46px); margin-bottom: 14px; }
+      .final .waitlist { margin: 24px auto 0; justify-content: center; }
+
+      footer { border-top: 1px solid var(--line); padding: 36px 0; color: var(--muted); font-size: 13px; }
+      .foot-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+      .foot-links { display: flex; gap: 20px; }
+      .foot-links a { text-decoration: none; }
+      .foot-links a:hover { color: #fff; }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        * { transition: none !important; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <a class="hp" href="#main">Skip to content</a>
+
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="brand grad-text" href="#" aria-label="Pocket Trainer home">
+          <svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true">
+            <defs>
+              <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#5B18C9" /><stop offset=".55" stop-color="#8B2EFF" /><stop offset="1" stop-color="#B65CFF" />
+              </linearGradient>
+            </defs>
+            <path d="M24 12c-7 0-12 5-12 13 0 6 4 10 12 10s12-4 12-10c0-8-5-13-12-13z" fill="url(#lg)" />
+            <path d="M18 16c0-4 2.6-7 6-7s6 3 6 7" fill="none" stroke="url(#lg)" stroke-width="3.2" stroke-linecap="round" />
+            <text x="24" y="30.5" text-anchor="middle" font-family="Montserrat, sans-serif" font-weight="900" font-style="italic" font-size="13" fill="#0A0A0C">PT</text>
+          </svg>
+          Pocket Trainer
+        </a>
+        <nav class="nav-links">
+          <a class="hide-sm" href="#features">Features</a>
+          <a class="hide-sm" href="#how">How it works</a>
+          <a class="hide-sm" href="#founder">Founder</a>
+          <a class="cta" href="#join">Join waitlist</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <span class="eyebrow">Fitness &amp; nutrition coach</span>
+            <h1>Your Coach.<br /><span class="grad-text">In Your Pocket.</span></h1>
+            <p class="lead">
+              Track workouts and macros, check your form with the camera, sync your watch, and get
+              AI coaching that adapts to you — built for everyday lifters, runners, and beginners.
+            </p>
+            <form id="join" class="waitlist" novalidate>
+              <label class="hp" for="email-1">Email</label>
+              <input id="email-1" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+              <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <button class="btn" type="submit">Join the waitlist</button>
+            </form>
+            <p class="form-msg" data-msg role="status" aria-live="polite"></p>
+            <p class="note">
+              General information, not medical advice. Built by a 15-year-old founder — youth safety
+              &amp; privacy come first.
+            </p>
+          </div>
+
+          <!-- PHONE MOCKUP -->
+          <div class="phone-wrap">
+            <div class="phone" aria-hidden="true">
+              <div class="screen">
+                <div class="top">
+                  <div>
+                    <div class="greet">Good morning,</div>
+                    <div class="name">Andrew</div>
+                  </div>
+                  <div class="av">AG</div>
+                </div>
+                <div class="ring-box">
+                  <div class="ring"></div>
+                  <div class="ring-label">
+                    <div>
+                      <div class="rk grad-text">Pro</div>
+                      <div class="sub">3 active days to next</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tiles">
+                  <div class="tile"><div class="v">12</div><div class="l">day streak</div></div>
+                  <div class="tile"><div class="v">34</div><div class="l">workouts</div></div>
+                </div>
+                <div class="bars">
+                  <div class="bar">
+                    <div class="lab"><span>Calories</span><span>1,980 / 2,720</span></div>
+                    <div class="track"><div class="fill" style="width: 73%; background: var(--primary)"></div></div>
+                  </div>
+                  <div class="bar">
+                    <div class="lab"><span>Protein</span><span>148 / 175</span></div>
+                    <div class="track"><div class="fill" style="width: 85%; background: var(--good)"></div></div>
+                  </div>
+                  <div class="bar">
+                    <div class="lab"><span>Carbs</span><span>210 / 300</span></div>
+                    <div class="track"><div class="fill" style="width: 70%; background: var(--glow)"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section id="features">
+        <div class="wrap">
+          <div class="sec-head">
+            <h2>Everything you need to <span class="grad-text">train smart</span></h2>
+            <p>One app for the whole loop: plan it, train it, log it, and learn from it.</p>
+          </div>
+          <div class="cards" id="feature-cards"></div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how">
+        <div class="wrap">
+          <div class="sec-head">
+            <h2>How it <span class="grad-text">works</span></h2>
+            <p>From first session to your next rank — three simple steps.</p>
+          </div>
+          <div class="steps">
+            <div class="step"><div class="n">1</div><h3>Set your goal</h3><p>Answer a few questions and get personalized calorie and macro targets in seconds.</p></div>
+            <div class="step"><div class="n">2</div><h3>Train &amp; track</h3><p>Build workouts, log meals with AI macro estimates, check your form, and sync your watch.</p></div>
+            <div class="step"><div class="n">3</div><h3>Level up</h3><p>Stay consistent to build streaks and climb the ranks — Beginner all the way to Legend.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOUNDER -->
+      <section id="founder">
+        <div class="wrap">
+          <div class="founder">
+            <div class="ag" aria-label="Andrew Gumbs">AG</div>
+            <div>
+              <h3>Andrew Gumbs</h3>
+              <div class="role">Founder &amp; CEO</div>
+              <p>
+                Andrew is a 15-year-old entrepreneur with 3+ years of lifting experience — also into
+                rock climbing and basketball. He built Pocket Trainer to make smart, supportive
+                coaching available to everyone, beginners included, right from their phone.
+              </p>
+              <p style="color: var(--muted); margin: 0">
+                <strong style="color: var(--light)">Mission:</strong> make great coaching accessible
+                and judgment-free, with advice that stays healthy, realistic, and sustainable.
+              </p>
+
+              <div class="sources">
+                <strong style="color: var(--light); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em">Sources &amp; references</strong>
+                <a href="https://www.who.int/news/item/04-03-2015-who-calls-on-countries-to-reduce-sugars-intake-among-adults-and-children" target="_blank" rel="noopener noreferrer">WHO — Free-sugars guideline ↗</a>
+                <a href="https://jissn.biomedcentral.com/articles/10.1186/s12970-017-0177-8" target="_blank" rel="noopener noreferrer">ISSN Position Stand: Protein and Exercise (2017) ↗</a>
+                <a href="https://odphp.health.gov/our-work/nutrition-physical-activity/physical-activity-guidelines" target="_blank" rel="noopener noreferrer">Physical Activity Guidelines for Americans (ODPHP) ↗</a>
+                <a href="https://www.cdc.gov/physical-activity-basics/guidelines/adults.html" target="_blank" rel="noopener noreferrer">CDC — Physical Activity Basics for Adults ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINAL CTA -->
+      <section class="final">
+        <div class="wrap">
+          <h2>Be first in line</h2>
+          <p style="color: var(--light); max-width: 32em; margin: 0 auto">
+            Join the waitlist and we'll let you know the moment Pocket Trainer drops.
+          </p>
+          <form class="waitlist" novalidate>
+            <label class="hp" for="email-2">Email</label>
+            <input id="email-2" name="email" type="email" required placeholder="you@email.com" autocomplete="email" />
+            <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <button class="btn" type="submit">Join the waitlist</button>
+          </form>
+          <p class="form-msg" data-msg role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap foot-inner">
+        <div>© <span id="yr"></span> Pocket Trainer · Your Coach. In Your Pocket.</div>
+        <div class="foot-links">
+          <a href="#features">Features</a>
+          <a href="#founder">Founder</a>
+          <a href="/privacy.html">Privacy</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // ---- config -------------------------------------------------------
+      // Point this at your deployed AI backend (Milestone 2) or a Formspree
+      // endpoint. Defaults to a relative path that works when the site is
+      // served behind the same origin / a proxy.
+      const WAITLIST_ENDPOINT = "/api/waitlist";
+
+      document.getElementById("yr").textContent = new Date().getFullYear();
+
+      // ---- feature cards (kept in JS so markup stays light) -------------
+      const ICONS = {
+        nutrition: '<path d="M12 3c4 0 7 3 7 8 0 6-4 10-7 10S5 17 5 11c0-5 3-8 7-8z"/><path d="M12 3v8"/>',
+        dumbbell: '<path d="M6.5 8v8M3.5 9.5v5M17.5 8v8M20.5 9.5v5M6.5 12h11"/>',
+        camera: '<path d="M3 8h4l2-2h6l2 2h4v11H3z"/><circle cx="12" cy="13" r="3.4"/>',
+        coach: '<path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/>',
+        calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>',
+        share: '<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/>',
+      };
+      const FEATURES = [
+        ["nutrition", "AI macro tracking", "Describe a meal in plain words and get calories and macros estimated instantly — or log them by hand."],
+        ["dumbbell", "Build & run workouts", "Plan resistance and cardio, then go inside a live session and check off every set to log it."],
+        ["camera", "Form check", "Use your camera to capture a lift and get specific, supportive cues on your technique."],
+        ["coach", "AI coach", "Chat with a coach that knows your stats and keeps advice healthy, realistic, and motivating."],
+        ["calendar", "Smart schedule", "Type your commitments and the app finds open gaps for home or gym sessions on a timeline."],
+        ["share", "Share your wins", "Auto-made banners for rank-ups and workouts — screenshot and share your progress."],
+      ];
+      const svg = (p) =>
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + p + "</svg>";
+      document.getElementById("feature-cards").innerHTML = FEATURES.map(
+        ([ic, t, d]) =>
+          '<div class="card"><div class="ic">' + svg(ICONS[ic]) + "</div><h3>" + t + "</h3><p>" + d + "</p></div>",
+      ).join("");
+
+      // ---- waitlist submit ---------------------------------------------
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      document.querySelectorAll("form.waitlist").forEach((form) => {
+        const msg = form.parentElement.querySelector("[data-msg]");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = form.email.value.trim();
+          const company = form.company.value.trim(); // honeypot
+          if (!EMAIL_RE.test(email)) {
+            setMsg(msg, "Please enter a valid email address.", "err");
+            return;
+          }
+          const btn = form.querySelector("button");
+          btn.disabled = true;
+          const original = btn.textContent;
+          btn.textContent = "Joining…";
+          try {
+            const res = await fetch(WAITLIST_ENDPOINT, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, company, source: "landing" }),
+            });
+            if (!res.ok) throw new Error("bad status");
+            setMsg(msg, "You're on the list! We'll be in touch. 💪", "ok");
+            form.reset();
+          } catch {
+            setMsg(msg, "Couldn't reach the server — please try again later.", "err");
+          } finally {
+            btn.disabled = false;
+            btn.textContent = original;
+          }
+        });
+      });
+      function setMsg(el, text, kind) {
+        if (!el) return;
+        el.textContent = text;
+        el.className = "form-msg " + kind;
+      }
+    </script>
+  </body>
+</html>

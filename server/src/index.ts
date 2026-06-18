@@ -1,4 +1,6 @@
 import "dotenv/config";
+import { appendFile, mkdir } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import express from "express";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -49,6 +51,34 @@ function handler(fn: (req: express.Request, res: express.Response) => Promise<vo
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, model: MODEL, configured: !!getClient() });
 });
+
+// landing-page waitlist signups (appended to a JSONL file; swap for a DB later)
+const WAITLIST_FILE = resolve(process.env.WAITLIST_FILE ?? "data/waitlist.jsonl");
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+app.post(
+  "/api/waitlist",
+  handler(async (req, res) => {
+    const email = String(req.body?.email ?? "").trim().toLowerCase();
+    // Honeypot: real users leave this empty; bots fill it. Pretend success.
+    if (String(req.body?.company ?? "").trim()) {
+      res.json({ ok: true });
+      return;
+    }
+    if (!EMAIL_RE.test(email) || email.length > 254) {
+      res.status(400).json({ error: "Please enter a valid email address." });
+      return;
+    }
+    const entry = {
+      email,
+      source: String(req.body?.source ?? "site").slice(0, 40),
+      ts: new Date().toISOString(),
+    };
+    await mkdir(dirname(WAITLIST_FILE), { recursive: true });
+    await appendFile(WAITLIST_FILE, JSON.stringify(entry) + "\n", "utf8");
+    res.json({ ok: true });
+  }),
+);
 
 // meal description -> macros
 app.post(
