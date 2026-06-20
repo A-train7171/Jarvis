@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+    <title>Privacy Policy — Pocket Trainer</title>
+    <meta name="description" content="How Pocket Trainer handles your data — privacy, youth safety, and your choices." />
+    <meta name="robots" content="index,follow" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:ital,wght@1,800&display=swap" rel="stylesheet" />
+    <style>
+      :root { --jet: #050505; --line: #26262c; --light: #d9d9d9; --muted: #8a8a92; --glow: #b65cff; }
+      body { margin: 0; background: var(--jet); color: #fff; font-family: "Inter", system-ui, sans-serif; line-height: 1.7; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+      a { color: var(--glow); }
+      h1 { font-family: "Montserrat"; font-style: italic; font-weight: 800; text-transform: uppercase; font-size: 32px; }
+      h2 { font-size: 19px; margin-top: 34px; }
+      p, li { color: var(--light); }
+      .muted { color: var(--muted); font-size: 13px; }
+      .back { display: inline-block; margin-bottom: 24px; color: var(--glow); text-decoration: none; font-weight: 600; }
+      hr { border: none; border-top: 1px solid var(--line); margin: 28px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="./">← Pocket Trainer</a>
+      <h1>Privacy Policy</h1>
+      <p class="muted">Draft for the waitlist phase. A finalized policy ships before any account or social features launch.</p>
+
+      <h2>Who we are</h2>
+      <p>Pocket Trainer is a fitness and nutrition app founded by Andrew Gumbs. Because our audience and founder include minors, we treat youth safety and privacy as first-class.</p>
+
+      <h2>What we collect right now</h2>
+      <p>During the waitlist phase we only collect the <strong>email address</strong> you submit, so we can notify you at launch. The app itself stores your training data <strong>on your device</strong>; we do not have accounts or a central database yet.</p>
+
+      <h2>AI features</h2>
+      <p>When you use AI features (macro estimates, exercise detail, the coach, form check), the text or image you provide is sent to our backend, which relays it to our AI provider to generate a response. We never embed AI keys in the app, and we don't sell your data.</p>
+
+      <h2>What we don't do</h2>
+      <ul>
+        <li>We don't sell or rent your personal information.</li>
+        <li>We don't show third-party ads.</li>
+        <li>We don't collect health data from your device without your explicit permission.</li>
+      </ul>
+
+      <h2>Youth safety &amp; parental consent</h2>
+      <p>Before any account or social features ship, we will add age-appropriate defaults and parental-consent handling. The Google Play developer account is held by an adult (18+).</p>
+
+      <h2>Your choices</h2>
+      <p>You can ask us to remove your email from the waitlist at any time. To do so, contact us at the address below.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about privacy? Email <a href="mailto:hello@pockettrainer.app">hello@pockettrainer.app</a>.</p>
+
+      <hr />
+      <p class="muted">General information, not medical advice. Last updated <span id="d"></span>.</p>
+    </div>
+    <script>
+      document.getElementById("d").textContent = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" });
+    </script>
+  </body>
+</html>

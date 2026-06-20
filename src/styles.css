@@ -1,0 +1,125 @@
+:root {
+  --jet: #050505;
+  --charcoal: #101014;
+  --charcoal2: #15151a;
+  --line: #26262c;
+  --primary: #8b2eff;
+  --deep: #5b18c9;
+  --glow: #b65cff;
+  --white: #ffffff;
+  --light: #d9d9d9;
+  --muted: #8a8a92;
+  --gradient: linear-gradient(135deg, #5b18c9, #8b2eff 55%, #b65cff);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--jet);
+  color: var(--white);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Visible keyboard focus for accessibility. */
+:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a32;
+  border-radius: 8px;
+}
+
+@keyframes pt-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pt-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes pt-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.pt-fade {
+  animation: pt-fade 0.22s ease both;
+}
+@keyframes pt-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.pt-pop {
+  animation: pt-pop 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+@keyframes pt-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}

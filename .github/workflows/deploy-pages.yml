@@ -1,0 +1,62 @@
+name: Deploy app to GitHub Pages
+
+# Publishes BOTH the marketing site and the app to GitHub Pages from one
+# deploy:
+#   /jarvis/      -> static landing site (site/)
+#   /jarvis/app/  -> the Vite app
+# The app runs standalone (AI features use offline fallbacks until the
+# backend is also deployed and VITE_API_BASE is set).
+
+on:
+  push:
+    branches: ["claude/pocket-trainer-production-5majaj"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install deps
+        run: npm install --no-audit --no-fund
+      - name: Build app
+        run: npm run build
+        env:
+          # The app is served under /jarvis/app/ on the project site.
+          VITE_BASE: /jarvis/app/
+      - name: Assemble site (landing at root, app under /app)
+        run: |
+          rm -rf _site
+          mkdir -p _site
+          cp -r site/. _site/
+          cp -r dist _site/app
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
