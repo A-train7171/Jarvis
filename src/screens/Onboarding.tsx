@@ -24,6 +24,8 @@ export function Onboarding() {
   const [contactValue, setContactValue] = useState(state.contact.value);
   const [avatarColor, setAvatarColor] = useState(state.profile.avatar.bgColor);
   const [avatarImage, setAvatarImage] = useState<string | null>(state.profile.avatar.image);
+  const [avatarErr, setAvatarErr] = useState<string | null>(null);
+  const [avatarBusy, setAvatarBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // step 2
@@ -77,12 +79,17 @@ export function Onboarding() {
 
   async function onPickPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-picking the same file
     if (!file) return;
+    setAvatarErr(null);
+    setAvatarBusy(true);
     try {
       const dataUrl = await processAvatar(file);
       setAvatarImage(dataUrl);
-    } catch {
-      /* ignore unsupported file */
+    } catch (err) {
+      setAvatarErr(err instanceof Error ? err.message : "Couldn't read that photo.");
+    } finally {
+      setAvatarBusy(false);
     }
   }
 
@@ -148,8 +155,8 @@ export function Onboarding() {
                 size={72}
               />
               <div style={{ display: "grid", gap: 8 }}>
-                <Button variant="ghost" onClick={() => fileRef.current?.click()} style={{ width: "auto", padding: "8px 14px" }}>
-                  {avatarImage ? "Change photo" : "Upload photo"}
+                <Button variant="ghost" onClick={() => fileRef.current?.click()} disabled={avatarBusy} style={{ width: "auto", padding: "8px 14px" }}>
+                  {avatarBusy ? "Processing…" : avatarImage ? "Change photo" : "Upload photo"}
                 </Button>
                 {avatarImage && (
                   <Button variant="ghost" onClick={() => setAvatarImage(null)} style={{ width: "auto", padding: "8px 14px" }}>
@@ -159,6 +166,7 @@ export function Onboarding() {
                 <input ref={fileRef} type="file" accept="image/*" hidden onChange={onPickPhoto} />
               </div>
             </div>
+            {avatarErr && <div style={{ color: colors.bad, fontSize: 12.5 }}>{avatarErr}</div>}
 
             {!avatarImage && (
               <div>

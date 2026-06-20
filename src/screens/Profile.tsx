@@ -26,14 +26,21 @@ export function Profile({ onBack }: { onBack: () => void }) {
   const [mode, setMode] = useState<GoalMode>(state.profile.mode);
   const [goals, setGoals] = useState(state.goals);
   const [saved, setSaved] = useState(false);
+  const [avatarErr, setAvatarErr] = useState<string | null>(null);
+  const [avatarBusy, setAvatarBusy] = useState(false);
 
   async function onPickPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
+    setAvatarErr(null);
+    setAvatarBusy(true);
     try {
       setImage(await processAvatar(file));
-    } catch {
-      /* ignore */
+    } catch (err) {
+      setAvatarErr(err instanceof Error ? err.message : "Couldn't read that photo.");
+    } finally {
+      setAvatarBusy(false);
     }
   }
 
@@ -63,11 +70,11 @@ export function Profile({ onBack }: { onBack: () => void }) {
 
   return (
     <Screen title="Profile" onBack={onBack}>
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 18 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8 }}>
         <Avatar name={name} avatar={{ bgColor: color, image }} size={72} />
         <div style={{ display: "grid", gap: 8 }}>
-          <Button variant="ghost" onClick={() => fileRef.current?.click()} style={{ width: "auto", padding: "8px 14px" }}>
-            {image ? "Change photo" : "Upload photo"}
+          <Button variant="ghost" onClick={() => fileRef.current?.click()} disabled={avatarBusy} style={{ width: "auto", padding: "8px 14px" }}>
+            {avatarBusy ? "Processing…" : image ? "Change photo" : "Upload photo"}
           </Button>
           {image && (
             <Button variant="ghost" onClick={() => setImage(null)} style={{ width: "auto", padding: "8px 14px" }}>
@@ -77,6 +84,7 @@ export function Profile({ onBack }: { onBack: () => void }) {
           <input ref={fileRef} type="file" accept="image/*" hidden onChange={onPickPhoto} />
         </div>
       </div>
+      {avatarErr && <div style={{ color: colors.bad, fontSize: 12.5, marginBottom: 14 }}>{avatarErr}</div>}
 
       {/* stats */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 18 }}>

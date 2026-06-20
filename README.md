@@ -184,6 +184,26 @@ validates the email (with a honeypot) and appends it to
 **Deploy.** Netlify: connect the repo — `netlify.toml` already sets
 `publish = "site"`. Vercel: set the project's root directory to `site/`.
 
+## Going live (coach online)
+
+The coach, macro estimator, and form check call the backend; they show offline
+fallbacks until it's deployed. To turn them on:
+
+1. **Deploy the backend.** In Render, **New → Blueprint** and point it at this
+   repo — `render.yaml` builds `server/` and starts it. (Any Node host works;
+   Render is just one-click.)
+2. **Add your key.** Set `ANTHROPIC_API_KEY` (secret) in the service's
+   Environment. Confirm it's live: `https://<your-service>.onrender.com/api/health`
+   should report `"configured": true`.
+3. **Allow the app's origin.** Set `CORS_ORIGINS` to wherever the app is served
+   (GitHub Pages origin, `https://localhost` for the Capacitor app, etc.).
+4. **Point the app at it.** Rebuild with the backend URL:
+   `VITE_API_BASE=https://<your-service>.onrender.com npm run build`
+   (or `build:single` for the one-file prototype). Now the coach streams for
+   real.
+
+The key never ships in the app — it lives only on the backend.
+
 ## Milestones
 
 1. **Scaffold + port UI + storage** ✅ — Vite/React/TS app, full prototype UI,
