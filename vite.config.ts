@@ -4,6 +4,9 @@ import path from "node:path";
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Base path. "/" for local dev and Capacitor; set VITE_BASE=/jarvis/ for the
+  // GitHub Pages project-site build (served under /<repo>/).
+  base: process.env.VITE_BASE ?? "/",
   plugins: [react()],
   resolve: {
     alias: {
