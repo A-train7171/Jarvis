@@ -1,50 +1,51 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
-import "mapbox-gl/dist/mapbox-gl.css";
 import { Providers } from "@/lib/providers";
-import { Header } from "@/components/Header";
-import { BottomNav } from "@/components/BottomNav";
+import { TopBar } from "@/components/TopBar";
+import { TabBar } from "@/components/TabBar";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-montserrat",
+  weight: ["600", "700", "800", "900"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "SetLocate GO — Discover filming locations in the wild",
+  title: "Pocket Trainer — Your Coach. In Your Pocket.",
   description:
-    "A location-based exploration game from SetLocate. Find, capture and collect iconic movie filming locations around the world.",
+    "Pocket Trainer is an AI-powered personal fitness operating system. Your trainer, nutrition coach, workout planner, form analyst, and accountability partner — all in one.",
+  applicationName: "Pocket Trainer",
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Pocket Trainer" },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#07070A",
+  viewportFit: "cover",
+  themeColor: "#050505",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
       <body className="font-sans antialiased">
         <Providers>
-          <div className="relative z-10 flex min-h-dvh flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <BottomNav />
+          <div className="relative z-10 mx-auto flex min-h-dvh max-w-md flex-col">
+            <TopBar />
+            <main className="flex-1 px-4 pb-32 pt-4">{children}</main>
           </div>
+          <TabBar />
         </Providers>
       </body>
     </html>

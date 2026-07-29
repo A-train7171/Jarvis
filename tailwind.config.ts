@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -9,60 +10,80 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Surfaces — dark-first command center
         bg: {
-          base: "var(--bg-base)",
-          elevated: "var(--bg-elevated)",
-          surface: "var(--bg-surface)",
+          base: "var(--bg-base)", // #050505 jet
+          card: "var(--bg-card)", // #121212 charcoal
+          surface: "var(--bg-surface)", // #1F1F1F gray
           overlay: "var(--bg-overlay)",
         },
+        line: {
+          DEFAULT: "var(--line)", // #2C2C2E
+          strong: "var(--line-strong)",
+        },
+        // Text
         ink: {
-          primary: "var(--ink-primary)",
-          secondary: "var(--ink-secondary)",
-          muted: "var(--ink-muted)",
+          primary: "var(--ink-primary)", // #FFFFFF
+          secondary: "var(--ink-secondary)", // #D9D9D9
+          muted: "var(--ink-muted)", // #8A8A92
         },
-        line: "var(--line)",
-        accent: {
-          DEFAULT: "var(--accent)",
-          hover: "var(--accent-hover)",
-          glow: "var(--accent-glow)",
+        // Purple system
+        purple: {
+          DEFAULT: "var(--purple)", // #8B2EFF
+          deep: "var(--purple-deep)", // #5B18C9
+          glow: "var(--purple-glow)", // #B65CFF
         },
-        rarity: {
-          common: "var(--rarity-common)",
-          rare: "var(--rarity-rare)",
-          epic: "var(--rarity-epic)",
-          legendary: "var(--rarity-legendary)",
-        },
+        // Semantic
         success: "var(--success)",
         warn: "var(--warn)",
+        danger: "var(--danger)",
+        // Macro / metric accents
+        protein: "var(--macro-protein)",
+        carbs: "var(--macro-carbs)",
+        fat: "var(--macro-fat)",
       },
       fontFamily: {
+        display: ["var(--font-montserrat)", "ui-sans-serif", "system-ui"],
         sans: ["var(--font-inter)", "ui-sans-serif", "system-ui"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
-        sm: "var(--radius-sm)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        xl: "var(--radius-xl)",
+        card: "var(--radius-card)", // 20px
+        pill: "999px",
       },
       boxShadow: {
-        glow: "0 0 24px var(--accent-glow)",
-        soft: "0 8px 32px rgba(0,0,0,0.4)",
-        lift: "0 16px 48px rgba(0,0,0,0.6)",
+        glow: "0 0 32px -4px var(--purple-glow-soft)",
+        "glow-sm": "0 0 18px -6px var(--purple-glow-soft)",
+        card: "0 8px 32px rgba(0,0,0,0.45)",
+        lift: "0 20px 60px rgba(0,0,0,0.6)",
+        "inner-line": "inset 0 0 0 1px var(--line)",
+      },
+      backgroundImage: {
+        "purple-gradient":
+          "linear-gradient(135deg, var(--purple-glow) 0%, var(--purple) 45%, var(--purple-deep) 100%)",
+        "purple-soft":
+          "linear-gradient(135deg, rgba(139,46,255,0.16), rgba(91,24,201,0.06))",
       },
       keyframes: {
-        "ping-slow": {
-          "0%": { transform: "scale(1)", opacity: "0.6" },
-          "100%": { transform: "scale(2.4)", opacity: "0" },
-        },
         "fade-up": {
-          "0%": { transform: "translateY(8px)", opacity: "0" },
+          "0%": { transform: "translateY(10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "scale-in": {
+          "0%": { transform: "scale(0.96)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "pulse-glow": {
+          "0%,100%": { opacity: "0.55" },
+          "50%": { opacity: "1" },
+        },
+        shimmer: {
+          "100%": { transform: "translateX(100%)" },
         },
       },
       animation: {
-        "ping-slow": "ping-slow 2.2s cubic-bezier(0,0,0.2,1) infinite",
-        "fade-up": "fade-up 0.4s ease-out both",
+        "fade-up": "fade-up 0.45s cubic-bezier(0.16,1,0.3,1) both",
+        "scale-in": "scale-in 0.3s cubic-bezier(0.16,1,0.3,1) both",
+        "pulse-glow": "pulse-glow 2.6s ease-in-out infinite",
       },
     },
   },
